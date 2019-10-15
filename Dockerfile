@@ -1,91 +1,24 @@
-image_config: &image_config
-
-  # make sure to set your Docker Hub username & password in CircleCI,
-  # either as project-specific environment variables
-  # or as resources in your organization's org-global Context
-
-  IMAGE_NAME: chicken-test
-
-  IMAGE_TAG: 0.0.3
-
-  # NOTE: if you're modifying this config.yml file manually
-  # rather than using the included setup script,
-  # make sure you also add the values of your IMAGE_NAME & IMAGE_TAG variables
-  # to the `test_image` job (line 55)
-
-  LINUX_VERSION: UBUNTU_XENIAL
-
-  RUBY_VERSION_NUM: 2.4.2
-
-  # NODE_VERSION_NUM: # pick a version from https://nodejs.org/dist
-
-  # PYTHON_VERSION_NUM: # pick a version from https://python.org/ftp/python
-
-  JAVA: false
-
-  MYSQL_CLIENT: false
-
-  POSTGRES_CLIENT: false
-
-  DOCKERIZE: true
-
-  BROWSERS: false
-
-version: 2
-jobs:
-  build:
-    machine: true
-    environment:
-      <<: *image_config
-
-    steps:
-      - checkout
-
-      - run: bash scripts/generate.sh > Dockerfile
-
-      - run: docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD
-
-      - run: docker build -t $DOCKER_USERNAME/$IMAGE_NAME:$IMAGE_TAG .
-
-      - run: docker push $DOCKER_USERNAME/$IMAGE_NAME:$IMAGE_TAG && sleep 10
-
-      - store_artifacts:
-          path: Dockerfile
-
-  test_image:
-    docker:
-      - image: $DOCKER_USERNAME/chicken-test:0.0.3
-        environment:
-          <<: *image_config
-
-    steps:
-      - checkout
-
-      #- run:
-      #    name: start Xvfb for phantomjs test
-          # command: Xvfb :99
-          # background: true
-
-      - run:
-          name: bats tests
-          command: |
-            mkdir -p test_results/bats
-            bats scripts/tests.bats | \
-            perl scripts/tap-to-junit.sh > \
-            test_results/bats/results.xml
-      - store_test_results:
-          path: test_results
-
-      - store_artifacts:
-          path: test_results
-
-workflows:
-  version: 2
-  dockerfile_wizard:
-    jobs:
-      - build:
-          context: org-global
-      - test_image:
-          context: org-global
-          requires:
-            - build
+FROM ubuntu:18.04
+USER root
+RUN apt-get -y update
+RUN apt-get -y install ruby ruby-dev build-essential git curl
+RUN git clone https://github.com/tfutils/tfenv.git ~/.tfenv
+RUN echo 'export PATH="$HOME/.tfenv/bin:$PATH"' >> ~/.bash_profile
+RUN ln -s ~/.tfenv/bin/* /usr/local/bin
+RUN tfenv install 0.12.9
+RUN tfenv install 0.11.14
+RUN tfenv use 0.12.9
+RUN mkdir -p ~/.terraform.d/plugin-cache
+RUN echo 'plugin_cache_dir = "/root/.terraform.d/plugin-cache"' >> ~/.terraformrc
+RUN mkdir ~/init
+RUN echo 'provider "aws" { version = ">= 1.15.0" }' > ~/init/provider.tf
+WORKDIR "/root/init"
+RUN terraform init
+WORKDIR "/root"
+RUN gem install bundler --version 2.0.2 --no-rdoc --no-ri
+RUN gem install test-kitchen --version 2.3.3 --no-rdoc --no-ri
+RUN gem install kitchen-terraform --version 5.1.1 --no-rdoc --no-ri
+RUN gem install awspec --version 1.18.1 --no-rdoc --no-ri
+RUN gem install kitchen-verifier-awspec --version 0.2.0 --no-rdoc --no-ri
+ENV LANG en_US.UTF-8
+ENV LANGUAGE en_US:en
