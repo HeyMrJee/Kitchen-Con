@@ -58,7 +58,7 @@ jobs:
 
 workflows:
   version: 2
-  dockerfile_wizard:
+  kitchen-con:
     jobs:
       - build:
           context: org-global
