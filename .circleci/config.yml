@@ -5,7 +5,6 @@ image_config: &image_config
   # or as resources in your organization's org-global Context
 
   IMAGE_NAME: kitchen-con
-
   IMAGE_TAG: 0.0.4
 
 version: 2
