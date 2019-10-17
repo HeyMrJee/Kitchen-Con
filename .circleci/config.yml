@@ -30,7 +30,7 @@ jobs:
 
   test_image:
     docker:
-      - image: $DOCKER_USERNAME/chicken-test:0.0.3
+      - image: $DOCKER_USERNAME/$IMAGE_NAME:$IMAGE_TAG 
         environment:
           <<: *image_config
 
