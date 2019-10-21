@@ -1,4 +1,5 @@
 FROM ubuntu:18.04
+MAINTAINER SRE support <sre.support@samsung.com>
 USER root
 RUN apt-get -y update
 RUN apt-get -y install ruby ruby-dev build-essential git curl

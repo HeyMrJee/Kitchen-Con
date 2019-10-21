@@ -22,35 +22,14 @@ jobs:
       #- run: bash scripts/generate.sh > Dockerfile
 
       #- run: docker build -t $DOCKER_USERNAME/$IMAGE_NAME:$IMAGE_TAG .
-      - run: 
-          name: Build docker image
-          command: |
-            docker build -f Dockerfile -t $DOCKER_NAME .
+      - run: docker build -t $DOCKER_NAME .
 
-      - run: 
-          name: Push docker image into docker registry
-          command: |
-            docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD
-            # When branch is master, update latest docker image
-            if [ "${CIRCLE_BRANCH}" == "master" ]; then
-                REMOTE_DOCKER_TAG=${DOCKER_NAME}:latest
-                docker tag ${DOCKER_NAME} ${REMOTE_DOCKER_TAG}
-                echo "Push docker image into ${REMOTE_DOCKER_TAG}"
-                docker push ${REMOTE_DOCKER_TAG}
-            fi
-            # When tag is defined, push new docker image with given tag
-            if [ -n "${CIRCLE_TAG}" ]; then
-                REMOTE_DOCKER_TAG=${DOCKER_NAME}:${CIRCLE_TAG}
-                docker tag ${DOCKER_NAME} ${REMOTE_DOCKER_TAG}
-                echo "Push docker image into ${REMOTE_DOCKER_TAG}"
-                docker push ${REMOTE_DOCKER_TAG}
-            fi
-            sleep 10
+      - run: docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD
 
-      #- run: docker push $DOCKER_USERNAME/$IMAGE_NAME:$IMAGE_TAG && sleep 10
+      - run: docker push $DOCKER_USERNAME/$IMAGE_NAME:$IMAGE_TAG && sleep 10
 
-      #- store_artifacts:
-      #    path: Dockerfile
+      - store_artifacts:
+          path: Dockerfile
 
   test_image:
     docker:
@@ -82,14 +61,10 @@ jobs:
 
 workflows:
   version: 2
-  docker-build:
+  kitchen-con:
     jobs:
       - build:
-          filters:
-            tags:
-              # When you push any tag, build will be triggered.
-              only: /.*/
-#          context: org-global
+          context: org-global
 #      - test_image:
 #          context: org-global
 #          requires:
