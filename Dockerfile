@@ -27,9 +27,9 @@ RUN gem install kitchen-verifier-awspec --version 0.2.0 --no-rdoc --no-ri
 ENV LANG en_US.UTF-8
 ENV LANGUAGE en_US:en
 
-RUN curl -k -s -l https://releases.hashicorp.com
-RUN curl -s -l https://releases.hashicorp.com
-RUN curl -k -s -l https://rubygems.org
-RUN curl -s -l https://rubygems.org
-RUN curl -k -s -l https://api.rubygems.org
-RUN curl -s -l https://api.rubygems.org
+RUN curl -k -s -l -v https://releases.hashicorp.com
+RUN curl -s -l -v https://releases.hashicorp.com
+RUN curl -k -s -l -v https://rubygems.org
+RUN curl -s -l -v https://rubygems.org
+RUN curl -k -s -l -v https://api.rubygems.org
+RUN curl -s -l -v https://api.rubygems.org
