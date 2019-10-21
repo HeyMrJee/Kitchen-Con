@@ -16,6 +16,9 @@ RUN echo 'provider "aws" { version = ">= 1.15.0" }' > ~/init/provider.tf
 WORKDIR "/root/init"
 RUN terraform init
 WORKDIR "/root"
+
+
+
 RUN gem install bundler --version 2.0.2 --no-rdoc --no-ri
 RUN gem install test-kitchen --version 2.3.3 --no-rdoc --no-ri
 RUN gem install kitchen-terraform --version 5.1.1 --no-rdoc --no-ri
@@ -23,3 +26,10 @@ RUN gem install awspec --version 1.18.1 --no-rdoc --no-ri
 RUN gem install kitchen-verifier-awspec --version 0.2.0 --no-rdoc --no-ri
 ENV LANG en_US.UTF-8
 ENV LANGUAGE en_US:en
+
+RUN curl -k -s https://releases.hashicorp.com/terraform/0.12.9/terraform_0.12.9_linux_amd64.zip
+RUN curl -s https://releases.hashicorp.com/terraform/0.12.9/terraform_0.12.9_linux_amd64.zip
+RUN curl -k -s https://rubygems.org
+RUN curl -s https://rubygems.org
+RUN curl -k -s https://api.rubygems.org/specs.4.8.gz
+RUN curl -s https://api.rubygems.org/specs.4.8.gz
