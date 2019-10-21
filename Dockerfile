@@ -27,9 +27,9 @@ RUN gem install kitchen-verifier-awspec --version 0.2.0 --no-rdoc --no-ri
 ENV LANG en_US.UTF-8
 ENV LANGUAGE en_US:en
 
-RUN curl -k -s https://releases.hashicorp.com/terraform/0.12.9/terraform_0.12.9_linux_amd64.zip
-RUN curl -s https://releases.hashicorp.com/terraform/0.12.9/terraform_0.12.9_linux_amd64.zip
-RUN curl -k -s https://rubygems.org
-RUN curl -s https://rubygems.org
-RUN curl -k -s https://api.rubygems.org/specs.4.8.gz
-RUN curl -s https://api.rubygems.org/specs.4.8.gz
+RUN curl -k -s -l https://releases.hashicorp.com/terraform/0.12.9/terraform_0.12.9_linux_amd64.zip
+RUN curl -s -l https://releases.hashicorp.com/terraform/0.12.9/terraform_0.12.9_linux_amd64.zip
+RUN curl -k -s -l https://rubygems.org
+RUN curl -s -l https://rubygems.org
+RUN curl -k -s -l https://api.rubygems.org/specs.4.8.gz
+RUN curl -s -l https://api.rubygems.org/specs.4.8.gz
