@@ -6,7 +6,7 @@ image_config: &image_config
 
   IMAGE_NAME: kitchen-con
   IMAGE_TAG: 0.0.4
-  DOCKER_NAME: abc/example-docker-build 
+  DOCKER_NAME: heymrjee/example-docker-build 
   DOCKER_REGISTRY: $DOCKER_USERNAME/$IMAGE_NAME:$IMAGE_TAG 
 
 version: 2
