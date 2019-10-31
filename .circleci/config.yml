@@ -5,10 +5,8 @@ image_config: &image_config
   # or as resources in your organization's org-global Context
 
   IMAGE_NAME: kitchen-con
-  IMAGE_TAG: 0.0.4
   DOCKER_NAME: heymrjee/example-docker-build 
-  DOCKER_REGISTRY: $DOCKER_USERNAME/$IMAGE_NAME:$IMAGE_TAG 
-
+  
 version: 2
 jobs:
   build:
@@ -27,6 +25,9 @@ jobs:
           command: |
             docker build -f Dockerfile -t $DOCKER_NAME .
 
+      - store_artifacts:
+          path: Dockerfile
+          
       - run: 
           name: Push docker image into docker registry
           command: |
@@ -49,8 +50,6 @@ jobs:
 
       #- run: docker push $DOCKER_USERNAME/$IMAGE_NAME:$IMAGE_TAG && sleep 10
 
-      #- store_artifacts:
-      #    path: Dockerfile
 
   test_image:
     docker:
@@ -89,8 +88,4 @@ workflows:
             tags:
               # When you push any tag, build will be triggered.
               only: /.*/
-#          context: org-global
-#      - test_image:
-#          context: org-global
-#          requires:
-#            - build
+
